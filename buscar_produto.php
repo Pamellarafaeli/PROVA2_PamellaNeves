@@ -2,19 +2,18 @@
 session_start();
 require_once 'conexao.php';
 
-// Verifica se o usuário está logado e tem perfil de adm (1) ou secretaria (2)
-if (!isset($_SESSION['perfil']) || ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2)) {
-    echo "<script>alert('Acesso negado!'); window.location.href='principal.php';</script>";
-    exit;
+if (!isset($_SESSION['id_usuario'])) {
+    echo "<script> alert('Acesso negado!'); window.location.href='login.php'; </script>";
+    exit();
 }
 
-$produtos = []; // Inicializa o array para armazenar resultados
+$produtos = [];
 
-// Se o formulário foi enviado e a busca não está vazia
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['busca'])) {
     $busca = trim($_POST['busca']);
 
-    // Verifica se a busca é um número (ID) ou texto (nome)
+
     if (is_numeric($busca)) {
         $sql = "SELECT * FROM produto WHERE id_produto = :busca ORDER BY nome_prod ASC";
         $stmt = $pdo->prepare($sql);
@@ -151,11 +150,42 @@ p {
     color: #E8C1C5;
     margin-top: 30px;
 }
+
+footer {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(90deg, #2E294E 0%, #9055A2 100%);
+            color: #fff;
+            text-align: center;
+            padding: 18px 0 18px 0;
+            font-weight: bold;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            box-shadow: 0 -2px 16px rgba(1, 22, 56, 0.10);
+        }
+
+        @media (max-width: 600px) {
+            form {
+                max-width: 90vw;
+                padding: 16px 8px 12px 8px;
+            }
+            footer {
+                font-size: 1em;
+                border-top-left-radius: 16px;
+                border-top-right-radius: 16px;
+                padding: 12px 0;
+            }
+        }
         </style>
 </head>
 <body>
     <h2> Lista de produtos </h2> 
-    <!-- FORMULARIO PARA BUSCAR USUARIOS -->
+ 
     <form action = "buscar_produto.php" method = "POST">
         <label for = "busca"> Digite o ID ou NOME (opcional) </label>
         <input type = "text" id= "busca" name = "busca" required>
@@ -194,7 +224,7 @@ p {
     <a href="principal.php">Voltar</a>
     
                 
-
+    <footer> Pamella Rafaeli Neves </footer>
 
 
 </body>

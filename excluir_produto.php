@@ -2,23 +2,21 @@
 session_start();
 require 'conexao.php';
 
-// Verifica se o usuário tem permissão de ADM
-if (!isset($_SESSION['perfil']) || ($_SESSION['perfil'] != 1 && $_SESSION['perfil'] != 2)) {
-    echo "<script>alert('Acesso negado!'); window.location.href='principal.php';</script>";
-    exit;
+if (!isset($_SESSION['id_usuario'])) {
+    echo "<script> alert('Acesso negado!'); window.location.href='login.php'; </script>";
+    exit();
 }
 
-// Busca todos os produtos cadastrados em ordem alfabética
 $sql = "SELECT * FROM produto ORDER BY nome_prod ASC";
 $stmt = $pdo->prepare($sql);
 $stmt->execute();
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Se um ID for passado via GET, exclui o produto
+
 if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     $id_produto = $_GET['id'];
 
-    // Exclui o produto do banco de dados
+    
     $sql = "DELETE FROM produto WHERE id_produto = :id";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':id', $id_produto, PDO::PARAM_INT);
@@ -115,6 +113,36 @@ p {
     color: #E8C1C5;
     margin-top: 30px;
 }
+
+footer {
+            width: 100%;
+            height: 50px;
+            background: linear-gradient(90deg, #2E294E 0%, #9055A2 100%);
+            color: #fff;
+            text-align: center;
+            padding: 18px 0 18px 0;
+            font-weight: bold;
+            font-size: 1.1em;
+            letter-spacing: 2px;
+            border-top-left-radius: 32px;
+            border-top-right-radius: 32px;
+            left: 0;
+            bottom: 0;
+            box-shadow: 0 -2px 16px rgba(1, 22, 56, 0.10);
+        }
+
+        @media (max-width: 600px) {
+            form {
+                max-width: 90vw;
+                padding: 16px 8px 12px 8px;
+            }
+            footer {
+                font-size: 1em;
+                border-top-left-radius: 16px;
+                border-top-right-radius: 16px;
+                padding: 12px 0;
+            }
+        }
         </style>
 </head>
 <body>
@@ -147,6 +175,7 @@ p {
         <p>Nenhum produto encontrado.</p>
     <?php endif; ?>
 
-    <a href="principal.php">Voltar</a>
+    <a href="principal.php">Voltar</a><br><BR>
+    <footer> Pamella Rafaeli Neves </footer>
 </body>
 </html>
